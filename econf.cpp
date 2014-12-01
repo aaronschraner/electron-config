@@ -27,6 +27,7 @@ using namespace std;
 #define ORBITAL(s) ( ( s & ORBITALBITS) )
 
 const unsigned char p=TYPE_P,s=TYPE_S,d=TYPE_D,f=TYPE_F;
+//duplicates to make writing fill order easier
 
 //order that program should fill orbitals in
 const unsigned char orbitalFillOrder[] = { 
@@ -51,15 +52,20 @@ const unsigned char orbitalFillOrder[] = {
 	6 | d,
 	7 | p
 };
+
 string toStr(int);
+
 int main()
 {
 	while(true)
 	{
-		cout << "How many electrons in atom?\n> ";
+		cout << "What is the atomic number of the neutral atom?\n> ";
 		int atomicNumber;
 		cin >> atomicNumber;
+		//get atomic number from user
+		
 		cout << "[" << atomicNumber << " p+]: " << toStr(atomicNumber) << "\n";
+		//print the electron configuration
 	}
 	return 0;
 }
@@ -88,7 +94,8 @@ int gPE(char orbital) //get maximum possible electrons for an orbital
 	}
 	return result;
 }
-char orbitType(unsigned char orbital)
+
+char orbitalType(unsigned char orbital) //character to represent orbital type
 {
 	switch(orbital&TYPEBITS)
 	{
@@ -106,24 +113,35 @@ char orbitType(unsigned char orbital)
 			break;
 	}
 }
+
+//create a string to represent the electron configuration
 string toStr(int atomicNumber)
 {
 	unsigned char thisOrbital;
+	
 	ostringstream s;
+	//to write strings to
+	
+	//iterate through all possible orbitals in order
 	for(int i=0;i<sizeof(orbitalFillOrder)/sizeof(char);i++)
 	{
 		thisOrbital=orbitalFillOrder[i];
-		if(gPE(thisOrbital) <= atomicNumber)
+		//set the active orbital
+
+		if(gPE(thisOrbital) <= atomicNumber) //if there is room for the entire filled orbital
 		{
 			atomicNumber -= gPE(thisOrbital);
-			s <<  (thisOrbital&ORBITALBITS) <<  orbitType(thisOrbital) << gPE(thisOrbital) << "  ";
+			s <<  (thisOrbital&ORBITALBITS) <<  orbitalType(thisOrbital) << gPE(thisOrbital) << "  ";
+			//add it to the result
 		}
-		else if(atomicNumber>0)
+		else if(atomicNumber>0) //if only part of the filled orbital will fit
 		{
-			s << (thisOrbital&ORBITALBITS) << orbitType(thisOrbital) << atomicNumber << " ";
+			s << (thisOrbital&ORBITALBITS) << orbitalType(thisOrbital) << atomicNumber << " ";
 			atomicNumber=0;
+			//add that part to the result
 		}
 	}
 	return s.str();
+	//return the result
 }
 	

@@ -27,7 +27,10 @@ using namespace std;
 #define ORBITAL(s) ( ( s & ORBITALBITS) )
 
 const unsigned char p=TYPE_P,s=TYPE_S,d=TYPE_D,f=TYPE_F;
-const unsigned char orbitalFillOrder[] = { //order that program should fill orbitals in
+//duplicates to make writing fill order easier
+
+//order that program should fill orbitals in
+const unsigned char orbitalFillOrder[] = { 
 //orbital | type
 	1 | s,
 	2 | s,
@@ -49,6 +52,28 @@ const unsigned char orbitalFillOrder[] = { //order that program should fill orbi
 	6 | d,
 	7 | p
 };
+
+string toStr(int);
+
+int main()
+{
+	while(true)
+	{
+		cout << "What is the atomic number of the neutral atom?\n> ";
+		int atomicNumber;
+		cin >> atomicNumber;
+		//get atomic number from user
+		
+		cout << "[" << atomicNumber << " p+]: " << toStr(atomicNumber) << "\n";
+		//print the electron configuration
+	}
+	return 0;
+}
+
+
+
+
+
 int gPE(char orbital) //get maximum possible electrons for an orbital
 {
 	int result;
@@ -69,7 +94,8 @@ int gPE(char orbital) //get maximum possible electrons for an orbital
 	}
 	return result;
 }
-char orbitType(unsigned char orbital)
+
+char orbitalType(unsigned char orbital) //character to represent orbital type
 {
 	switch(orbital&TYPEBITS)
 	{
@@ -87,39 +113,6 @@ char orbitType(unsigned char orbital)
 			break;
 	}
 }
-string toStr(int);
-int main()
-{
-	while(true)
-	{
-		cout << "How many electrons in atom?\n> ";
-		int atomicNumber;
-		cin >> atomicNumber;
-		cout << "[" << atomicNumber << " p+]: " << toStr(atomicNumber) << "\n";
-	}/*
-	int atomicNumberCopy = atomicNumber;
-	string electronConf = "";
-	for(int i=0; i<sizeof(&orbitalFillOrder); i++)
-	{
-		if(atomicNumberCopy >= getPossibleElectrons(orbitalFillOrder[i]))
-		{
-			atomicNumberCopy -= getPossibleElectrons(orbitalFillOrder[i]);
-			electronConf += toEconf(orbitalFillOrder[i], getPossibleElectrons(orbitalFillOrder[i]));
-		}
-		else
-		{
-			electronConf += toEconf(orbitalFillOrder[i], i);
-			cout << electronConf;
-		}
-
-	}*/
-	return 0;
-}
-
-
-
-
-
 string toStr(int atomicNumber)
 {
 	unsigned char thisOrbital;
@@ -130,11 +123,11 @@ string toStr(int atomicNumber)
 		if(gPE(thisOrbital) <= atomicNumber)
 		{
 			atomicNumber -= gPE(thisOrbital);
-			s <<  (thisOrbital&ORBITALBITS) <<  orbitType(thisOrbital) << gPE(thisOrbital) << "  ";
+			s <<  (thisOrbital&ORBITALBITS) <<  orbitalType(thisOrbital) << gPE(thisOrbital) << "  ";
 		}
 		else if(atomicNumber>0)
 		{
-			s << (thisOrbital&ORBITALBITS) << orbitType(thisOrbital) << atomicNumber << " ";
+			s << (thisOrbital&ORBITALBITS) << orbitalType(thisOrbital) << atomicNumber << " ";
 			atomicNumber=0;
 		}
 	}
